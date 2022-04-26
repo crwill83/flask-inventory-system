@@ -5,13 +5,16 @@ from flask_login import current_user, login_required
 ig = Blueprint('ig', __name__, template_folder='ig_templates')
 
 from .forms import AddToCart, AddToolForm, CreatePostForm, EditToolForm, UpdatePostForm
-from app.models import db, Inventory, Post, Rental, Cart
+from app.models import User, db, Inventory, Post, Rental, Cart
 
 # Adding a cart page
-@ig.route('/tools/cart')
-def cart():
-    cart = Cart.query.all()[::-1]
-    return render_template('cart.html', cart=cart)
+@ig.route('/cart')
+def cart(inventory_id):
+
+    # cart = Cart.query.all()[::-1]
+    cart_items = db.session.query(cart.inventory_id, inventory.inventory_id).all()
+
+    return render_template('cart.html', cart_items=cart_items)
 
 # Add item to cart
 @ig.route('/add-cart/<int:tool_id>', methods=["GET", "POST"])
@@ -194,3 +197,20 @@ def deletePost(post_id):
     db.session.commit()
                
     return redirect(url_for('ig.posts'))
+
+
+
+#
+#
+# API Stuff
+#
+#
+
+@ig.route('/api/tools')
+def apiPosts():
+    tools = Inventory.query.all()[::-1]
+    return {
+        'status': 'ok',
+        'total_results': len(tools),
+        'tools': [t.to_dict() for t in tools],
+        }

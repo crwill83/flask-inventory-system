@@ -12,6 +12,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(250), nullable=False)
     post = db.relationship('Post', backref='author', lazy=True)
+    cart_item = db.relationship('Cart', backref='cart_user', lazy=True)
 
     def __init__(self, username, email, password):
         self.username = username
@@ -29,6 +30,7 @@ class Inventory(db.Model):
     item_checkout_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
     item_date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    cart_item = db.relationship('Cart', backref='cart_product', lazy=True)
 
     def __init__(self, item_name, item_model, item_serial, item_description, item_image, user_id):
         self.item_name = item_name
@@ -37,6 +39,19 @@ class Inventory(db.Model):
         self.item_description = item_description
         self.item_image = item_image
         self.user_id = user_id
+
+    def to_dict(self):
+        return {
+            'id':self.id,
+            'item_name':self.item_name,
+            'item_model':self.item_model,
+            'item_serial':self.item_serial,
+            'item_description':self.item_description,
+            'item_image':self.item_image,
+            'item_checkout_date':self.item_checkout_date,
+            'item_date_created':self.item_date_created,
+            'user_id':self.user_id,
+        }
 
 
 # create database to store items added to a cart

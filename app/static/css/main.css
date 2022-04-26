@@ -1,7 +1,3 @@
-main {
-  /* background-color: rgb(93, 93, 93); */
-}
-
 .btn {
   margin-top: 5px;
 }
@@ -43,9 +39,6 @@ main {
       "password-text forgot-password"
       "password-space password-space"
       "sign-in-button sign-in-button"
-      "terms-and-services terms-and-services"
-      "stay-signed-in stay-signed-in"
-      "new-to-amazon new-to-amazon"
       "create-account create-account";
       border:2px solid rgba(211, 211, 211, 0.589);
       border-radius:6px;
